@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import SplashScreen from './Components/SplashScreen.jsx';
+import Login from './Components/Login.jsx';
 import Navbar from './Components/Navbar.jsx';
 import Dashboard from './Views/Dashboard.jsx';
 import Analytics from './Views/Analytics.jsx';
@@ -7,12 +8,13 @@ import Settings from './Views/Settings.jsx';
 import './App.css';
 
 function App() {
-  const [isLoading, setIsLoading] = useState(true);
+  // App flow states: 'splash' -> 'login' -> 'app'
+  const [appStage, setAppStage] = useState('splash'); 
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [currentView, setCurrentView] = useState('dashboard');
 
   // RBAC & User State
-  const [currentUserRole, setCurrentUserRole] = useState('admin'); // 'admin' | 'member'
+  const [currentUserRole, setCurrentUserRole] = useState('admin'); 
   const [currentUserName, setCurrentUserName] = useState('Alex Rivera');
 
   // Centralized Tasks State
@@ -21,31 +23,54 @@ function App() {
     return saved ? JSON.parse(saved) : [];
   });
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
+  // Handle splash screen completion -> move to login
+  const handleSplashFinished = () => {
+    setAppStage('login');
+  };
+
+  // Handle successful login -> move to main app dashboard
+  const handleLoginSuccess = (role, name) => {
+    setCurrentUserRole(role);
+    if (name) setCurrentUserName(name);
+    setAppStage('app');
+  };
 
   // Save tasks to LocalStorage on updates
   useEffect(() => {
     localStorage.setItem('sprintdesk_tasks', JSON.stringify(tasks));
   }, [tasks]);
 
+  // 1. Stage: Splash Screen
+  if (appStage === 'splash') {
+    return (
+      <div className={`app ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
+        <SplashScreen onAnimationFinished={handleSplashFinished} />
+      </div>
+    );
+  }
+
+  // 2. Stage: Login Screen
+  if (appStage === 'login') {
+    return (
+      <div className={`app ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
+        <Login onLoginSuccess={handleLoginSuccess} />
+      </div>
+    );
+  }
+
+  // 3. Stage: Main App (Navbar + Views)
   return (
     <div className={`app ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
-      {isLoading && <SplashScreen />}
-
       <Navbar 
         currentView={currentView}
         onViewChange={(view) => setCurrentView(view)}
         isDarkMode={isDarkMode}
         onToggleTheme={() => setIsDarkMode(!isDarkMode)}
+        currentUserRole={currentUserRole}
+        setCurrentUserRole={setCurrentUserRole}
       />
 
       <main style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
-        {/* Dashboard View */}
         {currentView === 'dashboard' && (
           <Dashboard 
             tasks={tasks} 
@@ -54,7 +79,6 @@ function App() {
           />
         )}
 
-        {/* Analytics View */}
         {currentView === 'analytics' && (
           <Analytics 
             tasks={tasks} 
@@ -63,7 +87,6 @@ function App() {
           />
         )}
 
-        {/* Settings View */}
         {currentView === 'settings' && (
           <Settings 
             currentUserRole={currentUserRole}

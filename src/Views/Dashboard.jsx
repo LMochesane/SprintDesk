@@ -3,18 +3,16 @@ import { initialTasks } from '../Data/initialTasks.js';
 import TaskCard from '../Components/TaskCard.jsx';
 import TaskModal from '../Components/TaskModal.jsx';
 import TaskDetailsModal from '../Components/TaskDetailsModal.jsx';
-import RoleSwitcher from '../Components/RoleSwitcher.jsx';
 import TaskFilterBar from '../Components/TaskFilterBar.jsx';
 import './Dashboard.css';
 
-function Dashboard() {
+function Dashboard({ currentUserRole }) {
   const [tasks, setTasks] = useState(() => {
     const savedTasks = localStorage.getItem('sprintdesk_tasks');
     return savedTasks ? JSON.parse(savedTasks) : initialTasks;
   });
 
-  // Security & Modal State
-  const [userRole, setUserRole] = useState('admin');
+  // Modal State (Role is now received via props from App.jsx -> Navbar)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
 
@@ -51,12 +49,12 @@ function Dashboard() {
   }, [tasks, searchQuery, priorityFilter, assigneeFilter]);
 
   const handleAddTask = (newTask) => {
-    if (userRole === 'viewer') return;
+    if (currentUserRole === 'viewer') return;
     setTasks([newTask, ...tasks]);
   };
 
   const handleMoveStatus = (taskId, newStatus) => {
-    if (userRole === 'viewer') return;
+    if (currentUserRole === 'viewer') return;
     setTasks(tasks.map((task) => {
       if (task.id === taskId) {
         const updated = { ...task, status: newStatus };
@@ -70,7 +68,7 @@ function Dashboard() {
   };
 
   const handleDeleteTask = (taskId) => {
-    if (userRole !== 'admin') return;
+    if (currentUserRole !== 'admin') return;
     setTasks(tasks.filter((task) => task.id !== taskId));
     if (selectedTask && selectedTask.id === taskId) {
       setSelectedTask(null);
@@ -93,9 +91,7 @@ function Dashboard() {
         </div>
         
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-          <RoleSwitcher currentRole={userRole} onRoleChange={setUserRole} />
-
-          {userRole !== 'viewer' && (
+          {currentUserRole !== 'viewer' && (
             <button className="new-task-btn" onClick={() => setIsModalOpen(true)}>
               + New Task
             </button>
@@ -116,7 +112,6 @@ function Dashboard() {
 
       <div className="kanban-board">
         {columns.map((col) => {
-          // Filter tasks per column from the pre-filtered tasks array
           const columnTasks = filteredTasks.filter((task) => task.status === col.id);
 
           return (
@@ -132,7 +127,7 @@ function Dashboard() {
                     <TaskCard 
                       key={task.id} 
                       task={task} 
-                      userRole={userRole}
+                      userRole={currentUserRole}
                       onMoveStatus={handleMoveStatus}
                       onDeleteTask={handleDeleteTask}
                       onSelectTask={(task) => setSelectedTask(task)}
@@ -155,7 +150,7 @@ function Dashboard() {
 
       <TaskDetailsModal
         task={selectedTask}
-        userRole={userRole}
+        userRole={currentUserRole}
         onClose={() => setSelectedTask(null)}
         onDeleteTask={handleDeleteTask}
         onMoveStatus={handleMoveStatus}

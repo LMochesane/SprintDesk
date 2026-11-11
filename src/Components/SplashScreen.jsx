@@ -1,9 +1,12 @@
 import React from 'react';
 import './SplashScreen.css';
 
-function SplashScreen() {
+function SplashScreen({ onAnimationFinished }) {
   return (
-    <div className="splash-container">
+    <div 
+      className="splash-container" 
+      onAnimationEnd={onAnimationFinished}
+    >
       <div className="splash-content">
         {/* Animated Icon / Logo Mark */}
         <div className="splash-logo-icon">

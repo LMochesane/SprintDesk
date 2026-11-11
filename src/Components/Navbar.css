@@ -91,6 +91,107 @@
   flex-shrink: 0;
 }
 
+/* Dev Role Dropdown Styles */
+.role-dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.role-dropdown-trigger {
+  background: var(--card-bg, #172A45);
+  border: 1px solid var(--card-border, #233554);
+  color: var(--text-primary, #FFFFFF);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  height: 38px;
+  box-sizing: border-box;
+}
+
+.role-dropdown-trigger:hover {
+  background: var(--card-border, #233554);
+}
+
+.role-indicator-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--btn-bg, #64FFDA);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--btn-bg, #64FFDA);
+}
+
+.role-text strong {
+  font-weight: 600;
+  color: var(--btn-bg, #64FFDA);
+}
+
+.dropdown-chevron {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+/* Floating Dropdown Menu */
+.role-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--nav-bg, #0D1D38);
+  border: 1px solid var(--card-border, #233554);
+  border-radius: 10px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+  width: 200px;
+  z-index: 1000;
+  padding: 6px;
+  animation: fadeIn 0.15s ease-in-out;
+}
+
+.dropdown-header {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary, #A0AEC0);
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--card-border, #233554);
+  margin-bottom: 4px;
+}
+
+.dropdown-item {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary, #A0AEC0);
+  padding: 8px 10px;
+  text-align: left;
+  font-size: 12px;
+  font-family: inherit;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.dropdown-item:hover {
+  background: var(--card-bg, #172A45);
+  color: var(--text-primary, #FFFFFF);
+}
+
+.dropdown-item.active {
+  background: var(--card-bg, #172A45);
+  color: var(--btn-bg, #64FFDA);
+  font-weight: 600;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Theme Toggle Button */
 .theme-toggle-btn {
   background: var(--card-bg, #172A45);
   border: 1px solid var(--card-border, #233554);
@@ -105,6 +206,7 @@
   font-size: 1rem;
   transition: transform 0.2s ease, background-color 0.2s ease;
   flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .theme-toggle-btn:hover {
@@ -112,6 +214,7 @@
   background: var(--card-border, #233554);
 }
 
+/* User Profile Badge */
 .user-profile-badge {
   width: 38px;
   height: 38px;
@@ -125,6 +228,7 @@
   justify-content: center;
   letter-spacing: 0.5px;
   flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 /* Mobile Responsiveness Adjustments */
@@ -140,6 +244,7 @@
 
   .navbar-actions {
     order: 2;
+    gap: 10px;
   }
 
   .navbar-links {
@@ -154,5 +259,30 @@
   .nav-link {
     padding: 6px 12px;
     font-size: 0.85rem;
+  }
+
+  /* Compact dropdown trigger for mobile screens */
+  .role-dropdown-trigger {
+    padding: 4px 8px;
+    font-size: 11px;
+    gap: 6px;
+    height: 34px;
+  }
+
+  /* Hide the literal word "Role:" on mobile screens to save horizontal space */
+  .role-text span {
+    display: none;
+  }
+
+  .role-dropdown-menu {
+    width: 170px;
+    right: -10px;
+  }
+
+  .theme-toggle-btn,
+  .user-profile-badge {
+    width: 34px;
+    height: 34px;
+    font-size: 0.9rem;
   }
 }
