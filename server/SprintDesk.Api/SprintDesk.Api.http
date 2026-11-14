@@ -1,0 +1,30 @@
+@SprintDesk.Api_HostAddress = http://localhost:5179
+
+GET {{SprintDesk.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+### Seed Admin User
+POST {{SprintDesk.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "admin@sprintdesk.com",
+  "passwordHash": "password123",
+  "username": "System Admin",
+  "role": "Admin"
+}
+
+###
+
+### Seed Developer User
+POST {{SprintDesk.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "developer@sprintdesk.com",
+  "passwordHash": "password123",
+  "username": "Lead Dev",
+  "role": "Developer"
+}

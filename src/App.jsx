@@ -13,9 +13,9 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [currentView, setCurrentView] = useState('dashboard');
 
-  // RBAC & User State
-  const [currentUserRole, setCurrentUserRole] = useState('admin'); 
-  const [currentUserName, setCurrentUserName] = useState('Alex Rivera');
+  // RBAC & User State (populated by backend API on login)
+  const [currentUserRole, setCurrentUserRole] = useState(null); 
+  const [currentUserName, setCurrentUserName] = useState('');
 
   // Centralized Tasks State
   const [tasks, setTasks] = useState(() => {
@@ -33,6 +33,14 @@ function App() {
     setCurrentUserRole(role);
     if (name) setCurrentUserName(name);
     setAppStage('app');
+  };
+
+  // Handle sign out -> clear session state and return to login gatekeeper
+  const handleLogout = () => {
+    setCurrentUserRole(null);
+    setCurrentUserName('');
+    setCurrentView('dashboard');
+    setAppStage('login');
   };
 
   // Save tasks to LocalStorage on updates
@@ -67,7 +75,7 @@ function App() {
         isDarkMode={isDarkMode}
         onToggleTheme={() => setIsDarkMode(!isDarkMode)}
         currentUserRole={currentUserRole}
-        setCurrentUserRole={setCurrentUserRole}
+        onLogout={handleLogout}
       />
 
       <main style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
@@ -90,7 +98,7 @@ function App() {
         {currentView === 'settings' && (
           <Settings 
             currentUserRole={currentUserRole}
-            setCurrentUserRole={setCurrentUserRole}
+            // setCurrentUserRole={setCurrentUserRole}
             currentUserName={currentUserName}
             setCurrentUserName={setCurrentUserName}
           />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import './Navbar.css';
 
 function Navbar({ 
@@ -6,35 +6,9 @@ function Navbar({
   onViewChange, 
   isDarkMode, 
   onToggleTheme, 
-  currentUserRole, 
-  setCurrentUserRole 
+  currentUserRole,
+  onLogout 
 }) {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null); // Reference to track the dropdown container
-
-  const roles = [
-    { id: 'admin', label: 'Admin (Full Control)' },
-    { id: 'member', label: 'Member (Create/Edit)' },
-    { id: 'viewer', label: 'Viewer (Read-Only)' }
-  ];
-
-  // Effect to handle clicks outside the dropdown component
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
-    }
-
-    if (isDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isDropdownOpen]);
-
   return (
     <header className="navbar">
       {/* Left: Brand / Logo */}
@@ -73,35 +47,12 @@ function Navbar({
 
       {/* Right: Actions */}
       <div className="navbar-actions">
-        {/* Dev Role Switcher Dropdown with ref attached */}
-        <div className="role-dropdown-container" ref={dropdownRef}>
-          <button 
-            className="role-dropdown-trigger"
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            aria-label="Toggle role menu"
-          >
-            <span className="role-indicator-dot"></span>
-            <span className="role-text">Role: <strong>{currentUserRole ? currentUserRole.toUpperCase() : 'ADMIN'}</strong></span>
-            <span className="dropdown-chevron">▼</span>
-          </button>
-
-          {isDropdownOpen && (
-            <div className="role-dropdown-menu">
-              <div className="dropdown-header">Switch Dev Role</div>
-              {roles.map((r) => (
-                <button
-                  key={r.id}
-                  className={`dropdown-item ${currentUserRole === r.id ? 'active' : ''}`}
-                  onClick={() => {
-                    setCurrentUserRole(r.id);
-                    setIsDropdownOpen(false);
-                  }}
-                >
-                  {r.label}
-                </button>
-              ))}
-            </div>
-          )}
+        {/* Read-Only Role Indicator Pill (Verified by Backend) */}
+        <div className="role-dropdown-trigger" style={{ cursor: 'default' }}>
+          <span className="role-indicator-dot"></span>
+          <span className="role-text">
+            Role: <strong>{currentUserRole ? currentUserRole.toUpperCase() : 'MEMBER'}</strong>
+          </span>
         </div>
 
         {/* Theme Toggle */}
@@ -113,6 +64,15 @@ function Navbar({
         <div className="user-profile-badge" title="Logged in as Relebohile">
           <span>RM</span>
         </div>
+
+        {/* Sign Out Button */}
+        <button 
+          className="sign-out-btn" 
+          onClick={onLogout} 
+          aria-label="Sign out"
+        >
+          Sign Out
+        </button>
       </div>
     </header>
   );
