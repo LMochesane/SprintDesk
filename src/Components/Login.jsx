@@ -30,22 +30,25 @@ export default function Login({ onLoginSuccess }) {
       const data = await response.json();
 
       if (!response.ok) {
-        // Displays "Invalid email or password." returned by AuthController
         setError(data.message || 'Login failed. Please check your credentials.');
         setIsLoading(false);
         return;
       }
 
-      // Normalize role to lowercase to match existing App.jsx RBAC checks
       const normalizedRole = data.role.toLowerCase();
-
-      // Pass database-verified role and username up to App.jsx
       onLoginSuccess(normalizedRole, data.username);
     } catch (err) {
       setError('Unable to connect to the server. Is the backend running?');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Pre-fills demo credentials without bypassing real API authentication
+  const fillDemoCredentials = (demoEmail, demoPassword) => {
+    setError('');
+    setEmail(demoEmail);
+    setPassword(demoPassword);
   };
 
   return (
@@ -85,6 +88,29 @@ export default function Login({ onLoginSuccess }) {
             {isLoading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
+
+        {/* Portfolio Demo Quick-Fill Section */}
+        <div className="demo-credentials-box">
+          <p className="demo-label">Recruiter / Demo Quick-Fill:</p>
+          <div className="demo-btn-group">
+            <button
+              type="button"
+              className="demo-pill-btn"
+              onClick={() => fillDemoCredentials('admin@sprintdesk.com', 'password123')}
+              disabled={isLoading}
+            >
+              🛡️ Admin Account
+            </button>
+            <button
+              type="button"
+              className="demo-pill-btn"
+              onClick={() => fillDemoCredentials('developer@sprintdesk.com', 'password123')}
+              disabled={isLoading}
+            >
+              👤 Developer Account
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

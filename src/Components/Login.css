@@ -82,3 +82,42 @@
   margin-bottom: 1rem;
   font-size: 0.9rem;
 }
+
+.demo-credentials-box {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--card-border, #233554);
+  text-align: center;
+}
+
+.demo-label {
+  font-size: 0.78rem;
+  color: var(--text-secondary, #A0AEC0);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.demo-btn-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.demo-pill-btn {
+  flex: 1;
+  background: var(--card-bg, #172A45);
+  border: 1px solid var(--card-border, #233554);
+  color: var(--text-primary, #FFFFFF);
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.demo-pill-btn:hover {
+  border-color: var(--btn-bg, #64FFDA);
+  background: rgba(100, 255, 218, 0.08);
+}
