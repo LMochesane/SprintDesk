@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SprintDesk.Api.Data;
+using SprintDesk.Api.Models; // Ensure your User model namespace is included
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,11 +30,22 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Automatically create the database and apply tables on startup
+// Automatically create the database, apply tables, and seed a test user on startup
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.EnsureCreated();
+
+    // Seed a default test user if none exist in the database yet
+    if (!db.Users.Any())
+    {
+        db.Users.Add(new User
+        {
+            Email = "your-email@example.com", // Replace with your hard-coded email
+            PasswordHash = "your-password"   // Replace with your hard-coded password
+        });
+        db.SaveChanges();
+    }
 }
 
 // Configure the HTTP request pipeline.
