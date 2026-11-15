@@ -30,20 +30,31 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Automatically create the database, apply tables, and seed a test user on startup
+// Automatically create the database, apply tables, and seed test users on startup
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.EnsureCreated();
 
-    // Seed a default test user if none exist in the database yet
+    // Seed default demo accounts with full profile details if none exist in the database yet
     if (!db.Users.Any())
     {
-        db.Users.Add(new User
-        {
-            Email = "your-email@example.com", // Replace with your hard-coded email
-            PasswordHash = "your-password"   // Replace with your hard-coded password
-        });
+        db.Users.AddRange(
+            new User
+            {
+                Username = "Admin User",
+                Email = "admin@sprintdesk.com",
+                PasswordHash = "password123",
+                Role = "Admin"
+            },
+            new User
+            {
+                Username = "Developer User",
+                Email = "developer@sprintdesk.com",
+                PasswordHash = "password123",
+                Role = "Developer"
+            }
+        );
         db.SaveChanges();
     }
 }
