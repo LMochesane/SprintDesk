@@ -50,4 +50,6 @@ app.UseAuthorization();
 // Map your API controllers
 app.MapControllers();
 
+app.MapGet("/", () => Results.Ok(new { message = "SprintDesk API is live", status = "healthy" }));
+
 app.Run();
