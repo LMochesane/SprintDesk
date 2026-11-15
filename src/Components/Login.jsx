@@ -19,7 +19,7 @@ export default function Login({ onLoginSuccess }) {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5179/api/auth/login', {
+      const response = await fetch('https://sprintdesk-icjn.onrender.com/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
