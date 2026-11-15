@@ -16,6 +16,6 @@ WORKDIR /app
 EXPOSE 8080
 COPY --from=build /app/publish .
 
-# Set environment variable to listen on port 8080 (Render's default)
-ENV ASPNETCORE_URLS=http://+:8080
+# Use Render's dynamic PORT environment variable, fallback to 8080 for local testing
+ENV ASPNETCORE_URLS=http://+:${PORT:-8080}
 ENTRYPOINT ["dotnet", "SprintDesk.Api.dll"]
